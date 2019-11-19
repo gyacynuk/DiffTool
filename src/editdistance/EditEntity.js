@@ -111,7 +111,7 @@ export function toEditEntities(editDistance) {
         entities.push(...mapToEditEntities(edit, entityNum))
         entityNum ++;
     });
-    return entities;
+    return groupByContiguousOperation(entities);
 }
 
 export class EditEntity {
