@@ -40,7 +40,41 @@ function computeEditDistanceMatrix(newWord, oldWord) {
             if (newWord[i-1] !== oldWord[j-1]) {
                 diffPenalty = 1;
             }
-            matrix[j][i] = Math.min(matrix[j-1][i], matrix[j][i-1], matrix[j-1][i-1]) + diffPenalty;
+            matrix[j][i] = Math.min(
+                matrix[j-1][i],
+                matrix[j][i-1],
+                matrix[j-1][i-1]) + diffPenalty;
+        }
+    }
+
+    return matrix;
+}
+
+function computeDocumentEditDistanceMatrix(newDocument, oldDocument) {
+    let m = newDocument.length + 1;
+    let n = oldDocument.length + 1;
+    let matrix = createMatrix(m, n);
+
+    // Populate base-case values
+    matrix[0][0] = 0;
+    for (let i = 1; i < m; i ++) {
+        matrix[0][i] = matrix[0][i-1] + newDocument[i-1].length;
+    }
+    for (let j = 1; j < n; j++) {
+        matrix[j][0] = matrix[j-1][0] + oldDocument[j-1].length;
+    }
+
+    // Compute values across scanline
+    for (let i = 1; i < m; i ++) {
+        for (let j = 1; j < n; j ++) {
+            let diffPenalty = 0;
+            if (newDocument[i-1] !== oldDocument[j-1]) {
+                diffPenalty = new EditDistance(newDocument[i-1], oldDocument[j-1], false).minEditDistance;
+            }
+            matrix[j][i] = Math.min(
+                matrix[j-1][i] + oldDocument[j-1].length,
+                matrix[j][i-1] + newDocument[i-1].length,
+                matrix[j-1][i-1] + diffPenalty) ;
         }
     }
 
@@ -100,11 +134,11 @@ export class Edit {
 
 export class EditDistance {
 
-    constructor(newWord, oldWord) {
+    constructor(newWord, oldWord, document = true) {
         this.newWord = newWord;
         this.oldWord = oldWord;
 
-        let editMatrix = computeEditDistanceMatrix(newWord, oldWord);
+        let editMatrix = document ? computeDocumentEditDistanceMatrix(newWord, oldWord) : computeEditDistanceMatrix(newWord, oldWord);
         this.minEditDistance = editMatrix[oldWord.length][newWord.length];
         this.fullEdits = computeEdits(editMatrix, newWord, oldWord);
         this.edits = this.fullEdits.filter(edit => edit.operation !== EditOperation.NONE);

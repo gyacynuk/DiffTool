@@ -24,7 +24,10 @@ const LineEntity = styled.span`
 `;
 
 const LineNum = styled(LineEntity)`
-    padding-right: 16px;
+    width: 32px;
+    padding-right: 8px;
+    padding-left: 0px;
+    text-align: right;
     color: #AAA;
     background-color: rgba(0, 0, 0, .1);
 `;

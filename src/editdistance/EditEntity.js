@@ -1,7 +1,5 @@
 import { Edit, EditOperation, EditDistance } from './EditDistance'
 
-const MAX_DISJOINT_REPLACEMENTS = 3;
-
 /**
  * 
  * @param {Edit} edit 
@@ -11,32 +9,21 @@ const MAX_DISJOINT_REPLACEMENTS = 3;
 function mapToEditEntities(edit, number) {
     const { operation, symbol, secondarySymbol } = edit;
     if (operation === EditOperation.REPLACE) {
-        let subEditDistance = new EditDistance(symbol, secondarySymbol);
-
-        // If there are too many disjoint replacements, then do not do subEditEnitity micro-highlighting
-        if (subEditDistance.getNumDisjointReplacements() > MAX_DISJOINT_REPLACEMENTS) {
-            return [
-                new EditEntity(EditOperation.INSERT, symbol, number),
-                new EditEntity(EditOperation.DELETE, secondarySymbol, number),
-            ]
-        }
-        // Otherwise process the pair of symbols again to compare their differences, used for micro-highlighting
-        else {
-            let insertSubEditEntities = subEditDistance.fullEdits
-                .map(edit => edit.operation === EditOperation.REPLACE
-                    ? new Edit(EditOperation.INSERT, edit.symbol)
-                    : edit)
-                .filter(subEdit => subEdit.operation !== EditOperation.DELETE);
-            let deleteSubEditEntities = subEditDistance.fullEdits
-                .map(edit => edit.operation === EditOperation.REPLACE
-                    ? new Edit(EditOperation.DELETE, edit.secondarySymbol)
-                    : edit)
-                .filter(subEdit => subEdit.operation !== EditOperation.INSERT);
-            return [
-                new EditEntity(EditOperation.INSERT, symbol, number, insertSubEditEntities),
-                new EditEntity(EditOperation.DELETE, secondarySymbol, number, deleteSubEditEntities)
-            ]
-        }
+        let subEditDistance = new EditDistance(symbol, secondarySymbol, false);
+        let insertSubEditEntities = subEditDistance.fullEdits
+            .map(edit => edit.operation === EditOperation.REPLACE
+                ? new Edit(EditOperation.INSERT, edit.symbol)
+                : edit)
+            .filter(subEdit => subEdit.operation !== EditOperation.DELETE);
+        let deleteSubEditEntities = subEditDistance.fullEdits
+            .map(edit => edit.operation === EditOperation.REPLACE
+                ? new Edit(EditOperation.DELETE, edit.secondarySymbol)
+                : edit)
+            .filter(subEdit => subEdit.operation !== EditOperation.INSERT);
+        return [
+            new EditEntity(EditOperation.INSERT, symbol, number, insertSubEditEntities),
+            new EditEntity(EditOperation.DELETE, secondarySymbol, number, deleteSubEditEntities)
+        ]
     }
     else if (operation === EditOperation.INSERT) {
         return [new EditEntity(operation, symbol, number)]
