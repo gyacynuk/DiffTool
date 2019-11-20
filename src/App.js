@@ -4,6 +4,7 @@ import DiffLine from './components/DiffLine'
 import Title from './components/Title'
 import TextInputs from './components/TextInputs'
 import Description from './components/Description'
+import DiffContainer from './components/DiffContainer'
 import { Box, Normalize } from '@smooth-ui/core-sc'
 import { EditDistance } from './editdistance/EditDistance'
 import { toEditEntities } from './editdistance/EditEntity'
@@ -94,6 +95,7 @@ class App extends Component {
                                 <TextInputs
                                     newDocument={this.state.newDocument.join('\n')}
                                     oldDocument={this.state.oldDocument.join('\n')}/>
+                                <DiffContainer/>
                         </Box>
                     </>
                 }
