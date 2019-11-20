@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import InlineDiff from './components/InlineDiff'
 import DiffLine from './components/DiffLine'
+import Title from './components/Title'
+import TextInputs from './components/TextInputs'
+import Description from './components/Description'
+import { Box, Normalize } from '@smooth-ui/core-sc'
 import { EditDistance } from './editdistance/EditDistance'
 import { toEditEntities } from './editdistance/EditEntity'
-import styled from "styled-components";
-import './App.css';
+import styled from '@xstyled/styled-components';
 
 const newDocument = [
     "Hello World!",
@@ -38,6 +42,10 @@ const HalfScreenView = styled.div`
 const TextArea = styled.textarea`
     width: 100%;
     height: 180px;
+    font-family: 'Inconsolata', monospace;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: auto;
 `;
 
 class App extends Component {
@@ -72,43 +80,66 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <span className="App-header-title">
-                        Minimal Levenshtein Distance Difference Tool
-                    </span>
-                    <p>
-                        Project by&nbsp;
-                        <a className="App-link"
-                        href="https://www.linkedin.com/in/griffin-yacynuk/"
-                        target="_blank"
-                        rel="noopener noreferrer">
-                            Griffin Yacynuk
-                        </a>
-                    </p>
-                </header>
-                <div>
+            <>
+                <Normalize />
+                {
+                    <>
+                        <Title/>
+                        
+                        <Box
+                            width={1}
+                            height={100}
+                            p={5}>
+                                <Description/>
+                                <TextInputs
+                                    newDocument={this.state.newDocument.join('\n')}
+                                    oldDocument={this.state.oldDocument.join('\n')}/>
+                        </Box>
+                    </>
+                }
+            </>
+       
+                    
+ 
+                /* <div className="App">
+                    <header className="App-header">
+                        <span className="App-header-title">
+                            Minimal Levenshtein Distance Difference Tool
+                        </span>
+                        <p>
+                            Project by&nbsp;
+                            <a className="App-link"
+                            href="https://www.linkedin.com/in/griffin-yacynuk/"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                                Griffin Yacynuk
+                            </a>
+                        </p>
+                    </header>
+                    <div>
 
-                <HalfScreenView>
-                    <TextArea 
-                        onChange={event => this.updateDocument(event.target, true)}
-                        value={this.state.newDocument.join('\n')}
-                    />
-                </HalfScreenView>
-                <HalfScreenView>
-                    <TextArea 
-                        onChange={event => this.updateDocument(event.target, false)}
-                        value={this.state.oldDocument.join('\n')}
-                    />
-                </HalfScreenView>
-                </div>
-                <div>
-                    {
-                        toEditEntities(this.state.editDistance)
-                            .map((editEntity, i) => <DiffLine editEntity={editEntity} key={i}/>)
-                    }
-                </div>
-            </div>
+                    <InlineDiff/>
+
+                    <HalfScreenView>
+                        <TextArea 
+                            onChange={event => this.updateDocument(event.target, true)}
+                            value={this.state.newDocument.join('\n')}
+                        />
+                    </HalfScreenView>
+                    <HalfScreenView>
+                        <TextArea 
+                            onChange={event => this.updateDocument(event.target, false)}
+                            value={this.state.oldDocument.join('\n')}
+                        />
+                    </HalfScreenView>
+                    </div>
+                    <div>
+                        {
+                            toEditEntities(this.state.editDistance)
+                                .map((editEntity, i) => <DiffLine editEntity={editEntity} key={i}/>)
+                        }
+                    </div>
+                </div> */
         );
     }
 }

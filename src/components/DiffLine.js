@@ -7,6 +7,7 @@ const Line = styled.div`
     height: auto;
     text-align: left;
     font-family: 'Inconsolata', monospace;
+    font-size: 16px;
 
     ${props => {
         if (props.operation === EditOperation.INSERT) {
@@ -17,9 +18,9 @@ const Line = styled.div`
     }};
 `;
 
-const LineEntity = styled.span`
-    padding: 2px 8px;
+const LineEntity = styled.div`
     display: inline-block;
+    padding: 2px 8px;
     white-space: pre;
 `;
 
@@ -32,7 +33,8 @@ const LineNum = styled(LineEntity)`
     background-color: rgba(0, 0, 0, .1);
 `;
 
-const LineReplace = styled.span`
+const LineReplace = styled.div`
+    display: inline-block;
     ${props => {
         if (props.operation === EditOperation.INSERT) {
             return "background-color: #a8f7a6";
