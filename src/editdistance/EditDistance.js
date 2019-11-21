@@ -50,6 +50,7 @@ function computeEditDistanceMatrix(newWord, oldWord) {
     return matrix;
 }
 
+// cost of 0 is reserved for perfect matches
 function computeDocumentEditDistanceMatrix(newDocument, oldDocument) {
     let m = newDocument.length + 1;
     let n = oldDocument.length + 1;
@@ -58,10 +59,10 @@ function computeDocumentEditDistanceMatrix(newDocument, oldDocument) {
     // Populate base-case values
     matrix[0][0] = 0;
     for (let i = 1; i < m; i ++) {
-        matrix[0][i] = matrix[0][i-1] + newDocument[i-1].length;
+        matrix[0][i] = matrix[0][i-1] + newDocument[i-1].length + 1;
     }
     for (let j = 1; j < n; j++) {
-        matrix[j][0] = matrix[j-1][0] + oldDocument[j-1].length;
+        matrix[j][0] = matrix[j-1][0] + oldDocument[j-1].length + 1;
     }
 
     // Compute values across scanline
@@ -70,11 +71,13 @@ function computeDocumentEditDistanceMatrix(newDocument, oldDocument) {
             let diffPenalty = 0;
             if (newDocument[i-1] !== oldDocument[j-1]) {
                 diffPenalty = new EditDistance(newDocument[i-1], oldDocument[j-1], false).minEditDistance;
+            } else {
+                diffPenalty = -matrix[j-1][i-1] - 1;
             }
             matrix[j][i] = Math.min(
                 matrix[j-1][i] + oldDocument[j-1].length,
                 matrix[j][i-1] + newDocument[i-1].length,
-                matrix[j-1][i-1] + diffPenalty) ;
+                matrix[j-1][i-1] + diffPenalty) + 1;
         }
     }
 
@@ -97,6 +100,12 @@ function computeEdits(editMatrix, newWord, oldWord) {
     let i = oldWord.length;
 
     while (i !== 0 || j !== 0) {
+        if(getEditCost(editMatrix, j, i) === 0) {
+            j--;
+            i--;
+            edits.push(new Edit(EditOperation.NONE, newWord[j]));
+            continue;
+        }
         let insertCost = getEditCost(editMatrix, j - 1, i);
         let deleteCost = getEditCost(editMatrix, j, i - 1);
         let maybeReplaceCost = getEditCost(editMatrix, j - 1, i - 1);

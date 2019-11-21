@@ -12,7 +12,6 @@ const TitleLink = styled(Text)`
     text-decoration: none;
 `
 
-
 class Title extends Component {
 
     render() {

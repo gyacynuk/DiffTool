@@ -77,7 +77,7 @@ function groupByContiguousOperation(editEntities) {
     }, accumulator);
 
     let orderedEntities = []
-    let prevEntityNumber = editEntities.length;
+    let prevEntityNumber = editEntities.length + 1;
     for (let count = 0; count < editEntities.length; count ++) {
         let currEntity = popMaxGroup(editsByOperation, prevEntityNumber);
         orderedEntities.push(currEntity);

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import InlineDiff from './components/InlineDiff'
-import DiffLine from './components/DiffLine'
 import Title from './components/Title'
 import TextInputs from './components/TextInputs'
 import Description from './components/Description'
@@ -16,7 +15,7 @@ const newDocument = [
     "It will try to display differences in an easy-to-read format,",
     "by doing things such as grouping blocks of contiguous edits together (as seen above),",
     "or by highlighting micro-differences between lines (as seen here).",
-    "If a line requires more than 3 replacements, then it will not be highlighted, as things can get messy.",
+    "If a line requires more than 3 replacements, then it will not be highlighted, as things can get messy.  long line long long lone",
     "Instead, the two lines will be treated as disjoint insertions and deletions, as seen below:",
     "I have fixed typos here as an example ;)",
     "This heuristic seems to work well in most cases."
@@ -53,30 +52,51 @@ class App extends Component {
     state = {
         newDocument: newDocument,
         oldDocument: oldDocument,
-        editDistance: new EditDistance(newDocument, oldDocument)
+        editDistance: new EditDistance(newDocument, oldDocument),
+        delayedComputation: true 
     };
 
-    updateDocument(target, updateNewDocument = true) {
-        let { newDocument, oldDocument } = this.state;
-        if (updateNewDocument) {
-            newDocument = target.value.split('\n');
+    constructor() {
+        super();
+        this.computeDiffTimer = null;
+
+        this.toggleDelayedComputation = this.toggleDelayedComputation.bind(this);
+        this.triggerDiffComputation = this.triggerDiffComputation.bind(this);
+        this.recomputeDiff = this.recomputeDiff.bind(this);
+        this.updateDocument = this.updateDocument.bind(this);
+    }
+
+    triggerDiffComputation() {
+        clearTimeout(this.computeDiffTimer);
+        if (this.state.delayedComputation) {
+            this.computeDiffTimer = setTimeout(() => {
+                this.recomputeDiff();
+            }, 1000);
         } else {
-            oldDocument =  target.value.split('\n');
+            this.recomputeDiff();
         }
+    }
+
+    recomputeDiff() {
+        let { newDocument, oldDocument } = this.state;
         this.setState({
-            newDocument: newDocument,
-            oldDocument: oldDocument,
             editDistance: new EditDistance(newDocument, oldDocument)
         });
     }
 
-    updateOldDocument(text) {
-        let oldDocument = text.split('\n')
+    updateDocument(target, updateNewDocument = true) {
+        let { newDocument, oldDocument, editDistance } = this.state;
         this.setState({
-            newDocument: newDocument,
-            oldDocument: oldDocument,
-            editDistance: new EditDistance(newDocument, oldDocument)
-        })
+            newDocument: updateNewDocument ? target.value.split('\n') : newDocument,
+            oldDocument: updateNewDocument ? oldDocument : target.value.split('\n')
+        });
+        this.triggerDiffComputation();
+    }
+
+    toggleDelayedComputation() {
+        this.setState({
+            delayedComputation: !this.state.delayedComputation
+        });
     }
 
     render() {
@@ -93,55 +113,20 @@ class App extends Component {
                             p={5}>
                                 <Description/>
                                 <TextInputs
-                                    newDocument={this.state.newDocument.join('\n')}
-                                    oldDocument={this.state.oldDocument.join('\n')}/>
-                                <DiffContainer/>
+                                    newDocument={newDocument.join('\n')}
+                                    oldDocument={oldDocument.join('\n')}
+                                    updateDocument={this.updateDocument}/>
+                                {/* <DisplayOptions
+                                    viewInline={this.state.viewInline}
+                                   /> */}
+                                <DiffContainer
+                                    editDistance={this.state.editDistance}
+                                    delayedComputation={this.state.delayedComputation}
+                                    toggleDelayedComputation={this.toggleDelayedComputation}/>
                         </Box>
                     </>
                 }
             </>
-       
-                    
- 
-                /* <div className="App">
-                    <header className="App-header">
-                        <span className="App-header-title">
-                            Minimal Levenshtein Distance Difference Tool
-                        </span>
-                        <p>
-                            Project by&nbsp;
-                            <a className="App-link"
-                            href="https://www.linkedin.com/in/griffin-yacynuk/"
-                            target="_blank"
-                            rel="noopener noreferrer">
-                                Griffin Yacynuk
-                            </a>
-                        </p>
-                    </header>
-                    <div>
-
-                    <InlineDiff/>
-
-                    <HalfScreenView>
-                        <TextArea 
-                            onChange={event => this.updateDocument(event.target, true)}
-                            value={this.state.newDocument.join('\n')}
-                        />
-                    </HalfScreenView>
-                    <HalfScreenView>
-                        <TextArea 
-                            onChange={event => this.updateDocument(event.target, false)}
-                            value={this.state.oldDocument.join('\n')}
-                        />
-                    </HalfScreenView>
-                    </div>
-                    <div>
-                        {
-                            toEditEntities(this.state.editDistance)
-                                .map((editEntity, i) => <DiffLine editEntity={editEntity} key={i}/>)
-                        }
-                    </div>
-                </div> */
         );
     }
 }

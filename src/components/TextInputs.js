@@ -13,26 +13,28 @@ class TextInputs extends Component {
     render() {
         return (
             <>
-            <Box row>
-                <Box 
-                    col={{xs: 1, md: 1/2}}
-                    p={2}>
-                        <Text variant="h4">New Document</Text>
-                        <CodeTextArea 
-                            scale="base"
-                            rows={8}
-                            defaultValue={this.props.newDocument}/>
+                <Box row>
+                    <Box 
+                        col={{xs: 1, md: 1/2}}
+                        p={2}>
+                            <Text variant="h4">New Document</Text>
+                            <CodeTextArea 
+                                scale="base"
+                                rows={8}
+                                defaultValue={this.props.newDocument}
+                                onChange={event => this.props.updateDocument(event.target, true)}/>
+                    </Box>
+                    <Box 
+                        col={{xs: 1, md: 1/2}}
+                        p={2}>
+                            <Text variant="h4">Old Document</Text>
+                            <CodeTextArea 
+                                scale="base"
+                                rows={8}
+                                defaultValue={this.props.oldDocument}
+                                onChange={event => this.props.updateDocument(event.target, false)}/>
+                    </Box>
                 </Box>
-                <Box 
-                    col={{xs: 1, md: 1/2}}
-                    p={2}>
-                        <Text variant="h4">Old Document</Text>
-                        <CodeTextArea 
-                            scale="base"
-                            rows={8}
-                            defaultValue={this.props.oldDocument}/>
-                </Box>
-            </Box>
             </>
         )
     }

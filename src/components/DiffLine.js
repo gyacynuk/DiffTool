@@ -5,6 +5,8 @@ import { EditOperation } from '../editdistance/EditDistance'
 const Line = styled.div`
     width: 100%;
     height: auto;
+    display: inline-flex;
+    overflow: scroll;
     text-align: left;
     font-family: 'Inconsolata', monospace;
     font-size: 16px;
@@ -26,6 +28,7 @@ const LineEntity = styled.div`
 
 const LineNum = styled(LineEntity)`
     width: 32px;
+    min-width: 32px;
     padding-right: 8px;
     padding-left: 0px;
     text-align: right;
