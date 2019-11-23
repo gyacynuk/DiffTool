@@ -20,7 +20,7 @@ class TextInputs extends Component {
                             <Text variant="h4">New Document</Text>
                             <CodeTextArea 
                                 scale="base"
-                                rows={8}
+                                rows={10}
                                 defaultValue={this.props.newDocument}
                                 onChange={event => this.props.updateDocument(event.target, true)}/>
                     </Box>
@@ -30,7 +30,7 @@ class TextInputs extends Component {
                             <Text variant="h4">Old Document</Text>
                             <CodeTextArea 
                                 scale="base"
-                                rows={8}
+                                rows={10}
                                 defaultValue={this.props.oldDocument}
                                 onChange={event => this.props.updateDocument(event.target, false)}/>
                     </Box>

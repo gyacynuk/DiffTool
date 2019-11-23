@@ -1,11 +1,5 @@
 import React, { Component } from 'react'
-import { Box, Button, Text, Separator } from '@smooth-ui/core-sc'
-import styled from '@xstyled/styled-components';
-
-const A = styled.a`
-    color: #09d3ac;
-    text-decoration: none;
-`
+import { Text, Separator } from '@smooth-ui/core-sc'
 
 class Description extends Component {
 

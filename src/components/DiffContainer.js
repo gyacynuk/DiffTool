@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { Box, Radio, RadioGroup, Switch, useCheckboxState, useRadioState } from '@smooth-ui/core-sc'
-import styled, {style} from '@xstyled/styled-components';
-import { toEditEntities } from '../editdistance/EditEntity'
+import React from 'react'
+import { Box, Radio, RadioGroup, Switch, useRadioState, Separator } from '@smooth-ui/core-sc'
+import styled from '@xstyled/styled-components';
+import { toEditEntities, groupByContiguousOperation, splitByOperation } from '../editdistance/EditEntity'
 import DiffLine from './DiffLine'
 
 const LeftMarginLabel = styled.label`
@@ -14,41 +14,103 @@ const RoundBoxer = styled(Box)`
     overflow: scroll;
 `;
 
+const Pill = styled.div`
+    display: inline-block;
+    border: 2px solid ${props => props.color};
+    color: ${props => props.color};
+    border-radius: 16px;
+    padding: 4px 8px;
+    margin-left: 16px;
+    font-size: 12px;
+`;
+
+function getColor(text) {
+    if (text === "Done") {
+        return "#3bd12e";
+    } else if (text === "Waiting") {
+        return "#17A2B8";
+    } else if (text === "Processing") {
+        return "#AF1213";
+    } else {
+        return "#333";
+    }
+}
+
 function DiffContainer(props) {
     const radioState = useRadioState({state: "viewInline"});
-    const checkbox = useCheckboxState({state: true})
+
+    let editEntities = toEditEntities(props.editDistance);
+
+    let inlineView = <RoundBoxer row
+        m={2}
+        mb={5}>
+        {
+            groupByContiguousOperation(toEditEntities(props.editDistance))
+                .map((editEntity, i) => <DiffLine editEntity={editEntity} key={i}/>)
+        }
+    </RoundBoxer>;
+
+    let sideView = <RoundBoxer row
+        m={2}
+        mb={5}>
+            <Box col={1/2}> 
+            {
+                splitByOperation(editEntities)[0]
+                    .map((editEntity, i) => <DiffLine editEntity={editEntity} key={i}/>)
+            }
+            </Box>
+            <Box col={1/2}>
+            {
+                splitByOperation(editEntities)[1]
+                    .map((editEntity, i) => <DiffLine editEntity={editEntity} key={i}/>)
+            }
+            </Box>
+        </RoundBoxer>;
+
+    let view = [inlineView];
+    if (radioState.state === "viewSide") {
+        view = [sideView];
+    }
+
     return (
         <>
             <Box row mt={2}>
                 <Box col>
-                    <LeftMarginLabel
-                        mx={1}>
+                    <LeftMarginLabel mx={1}>
                         <Switch
                             checked={props.delayedComputation}
                             onChange={props.toggleDelayedComputation}
                             scale="sm"
-                            name="xs"/> Delayed Computation
+                            name="xs"
+                            verticalAlign="middle"/> Delayed Computation
                     </LeftMarginLabel>
+                    <Pill color={getColor(props.diffStateString)}>
+                        <strong>{props.diffStateString}</strong>
+                    </Pill>
+                    <Separator/>
                     <RadioGroup {...radioState}
                         aria-label="display options"
-                        py={1}>  
-                            <LeftMarginLabel>
-                                <Radio {...radioState} value="viewInline"/> Inline Comparison
-                            </LeftMarginLabel>
-                            <LeftMarginLabel>
-                                <Radio {...radioState} value="viewSide"/> Side Comparison
-                            </LeftMarginLabel>
+                        py={1}>
+                            <Box row justifyContent={{ md: 'left' }}>
+                                <Box col={{xs:1, md: 'auto'}}>
+                                    <LeftMarginLabel>
+                                        <Radio {...radioState} value="viewInline"/> Inline
+                                    </LeftMarginLabel>
+                                    </Box>  
+                                <Box col={{xs:1, md: 'auto'}}
+                                    mt={{xs:2, md: 0}}>
+                                    <LeftMarginLabel>
+                                        <Radio {...radioState} value="viewSide"/> Side
+                                    </LeftMarginLabel>
+                                </Box>  
+                            </Box>
+                             
                     </RadioGroup>
                 </Box>
             </Box>
-            <RoundBoxer row
-                m={2}
-                mb={5}>
-                {
-                    toEditEntities(props.editDistance)
-                        .map((editEntity, i) => <DiffLine editEntity={editEntity} key={i}/>)
-                }
-            </RoundBoxer>
+            {
+                view.map(i => i)
+            }
         </>
     );
 }

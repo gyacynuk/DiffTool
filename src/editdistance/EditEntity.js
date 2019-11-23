@@ -65,7 +65,7 @@ function popMaxGroup(editsByOperation, prevEntityNumber) {
     }
 }
 
-function groupByContiguousOperation(editEntities) {
+export function groupByContiguousOperation(editEntities) {
     // Build accumulator as a map with an empty array present for all possible keys
     let accumulator = { 1: [], 2:[], 3:[], 4: [] }
 
@@ -98,7 +98,32 @@ export function toEditEntities(editDistance) {
         entities.push(...mapToEditEntities(edit, entityNum))
         entityNum ++;
     });
-    return groupByContiguousOperation(entities);
+    return entities;
+}
+
+export function splitByOperation(editEntities) {
+    let inserts = [];
+    let deletes = [];
+
+    editEntities.forEach(editEntity => {
+        let { operation, subEditEntities } = editEntity;
+        if (operation === EditOperation.INSERT) {
+            inserts.push(editEntity);
+            if (subEditEntities === null) {
+                deletes.push(new EditEntity(EditOperation.NONE, "", "*",));
+            }
+        } else if (operation === EditOperation.DELETE) {
+            deletes.push(editEntity);
+            if (subEditEntities === null) {
+                inserts.push(new EditEntity(EditOperation.NONE, "", "*",));
+            }
+        } else {
+            inserts.push(editEntity);
+            deletes.push(editEntity);
+        }
+    })
+
+    return [inserts, deletes];
 }
 
 export class EditEntity {

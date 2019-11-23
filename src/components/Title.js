@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Box, Button, Text, Separator } from '@smooth-ui/core-sc'
-import styled, {style} from '@xstyled/styled-components';
+import { Box, Text } from '@smooth-ui/core-sc'
+import styled from '@xstyled/styled-components';
 
 const TitleText = styled(Text)`
     color: #FFF;
