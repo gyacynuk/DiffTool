@@ -1,17 +1,12 @@
 import React from 'react'
-import { Box, Radio, RadioGroup, Switch, useRadioState, Separator } from '@smooth-ui/core-sc'
 import styled from '@xstyled/styled-components';
 import { toEditEntities, groupByContiguousOperation, splitByOperation } from '../editdistance/EditEntity'
+import { Box, Radio, RadioGroup, Switch, useRadioState, Separator } from '@smooth-ui/core-sc'
+import { RoundBoxer } from './Shared'
 import DiffLine from './DiffLine'
 
 const LeftMarginLabel = styled.label`
     margin-left: 16px;
-`;
-
-const RoundBoxer = styled(Box)`
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 4px;
-    overflow: scroll;
 `;
 
 const Pill = styled.div`

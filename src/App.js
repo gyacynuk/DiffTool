@@ -116,7 +116,8 @@ class App extends Component {
                         <Box
                             width={1}
                             height={100}
-                            p={4}>
+                            px={{xs:3, md: 6}}
+                            py={3}>
                                 <Description/>
                                 <TextInputs
                                     newDocument={newDocument.join('\n')}

@@ -27,6 +27,33 @@ class Title extends Component {
                         target="_blank"
                         rel="noopener noreferrer">Griffin Yacynuk</TitleLink>
                     </TitleText>
+                    
+                    <Box row justifyContent={'center'}>
+                        <Box col={"auto"}
+                            forwardedAs="a"
+                            href="https://www.linkedin.com/in/griffin-yacynuk/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            mx={2}>
+                            <TitleText variant="h4">
+                                <i className="fab fa-linkedin"></i>
+                            </TitleText>
+                        </Box>
+                        <Box col={"auto"}
+                            forwardedAs="a"
+                            href="https://github.com/gyacynuk"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            mx={2}>
+                            <TitleText variant="h4">
+                                <i className="fab fa-github"></i>
+                            </TitleText>
+                        </Box>
+                    </Box>
+                    
+    
+                        {/* <i class="fab fa-github"></i> */}
+                    
             </Box>
             
         )
