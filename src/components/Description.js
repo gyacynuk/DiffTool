@@ -1,8 +1,15 @@
+/**
+ * ------------------------------------------------------------------------------------------------
+ * A component used to build the text descriptions in the webpage, including the "Background" and
+ * "Algorithm Overview" sections. This also creates the "Try it Out" header.
+ *
+ * Author: Griffin Yacynuk
+ * ------------------------------------------------------------------------------------------------
+ */
 import React, { Component } from 'react'
 import { Box, Text, Separator } from '@smooth-ui/core-sc'
 import { RoundBoxer } from './Shared'
 import styled from '@xstyled/styled-components';
-// Images
 import edit_distance from '../assets/edit_distance.png'
 import matrix from '../assets/matrix.png'
 

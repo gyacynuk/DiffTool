@@ -1,3 +1,11 @@
+/**
+ * ------------------------------------------------------------------------------------------------
+ * The component which builds two text areas in which the user can edit the input documents for the
+ * algorithm.
+ *
+ * Author: Griffin Yacynuk
+ * ------------------------------------------------------------------------------------------------
+ */
 import React, { Component } from 'react'
 import { Box, Textarea, Text } from '@smooth-ui/core-sc'
 import styled from '@xstyled/styled-components';

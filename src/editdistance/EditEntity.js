@@ -1,12 +1,22 @@
+/**
+ * ------------------------------------------------------------------------------------------------
+ * A set of classes and functions for processing edits and edit distance matrices into graphically
+ * displayable components.
+ *
+ * Author: Griffin Yacynuk
+ * ------------------------------------------------------------------------------------------------
+ */
 import { Edit, EditOperation, EditDistance } from './EditDistance'
 
 /**
- * 
- * @param {Edit} edit 
- * @param {Number} number 
+ * Converts an Edit into a displayable EditEntity. In the case of a REPLACE, convert it into two
+ * seperate EditEntities (one representing an INSERT, the other a DELETE).
+ *
+ * @param {Edit} edit the edit to be converted to a displayable component.
+ * @param {Number} number the line number given to this operation.
  * @returns {EditEntity[]}
  */
-function mapToEditEntities(edit, number) {
+function convertToEditEntities(edit, number) {
     const { operation, symbol, secondarySymbol } = edit;
     if (operation === EditOperation.REPLACE) {
         let subEditDistance = new EditDistance(symbol, secondarySymbol, false);
@@ -34,8 +44,10 @@ function mapToEditEntities(edit, number) {
 }
 
 /**
- * 
- * @param {EditEntity[]} array 
+ * Peek at the edit number of the last edit entity in the passed in list.
+ *
+ * @param {EditEntity[]} array the list of edit entities.
+ * @returns {Number}
  */
 function peekEntityNumber(array) {
     if (array.length > 0) {
@@ -44,6 +56,16 @@ function peekEntityNumber(array) {
     return Number.NEGATIVE_INFINITY;
 }
 
+/**
+ * Given a map grouping EditEntities by their associated EditOperation, pop the entity from the
+ * group with the maximum enity number, or in the case of contiguous operations, the next operation
+ * in a contiguous sequence.
+ * 
+ * @param {Map<EditOperation, EditEntity>} editsByOperation a map grouping EditEntities by their
+ * associated EditOperation
+ * @param {Number} prevEntityNumber the entity number of the previously popped edit entity.
+ * @returns {EditEntity}
+ */
 function popMaxGroup(editsByOperation, prevEntityNumber) {
     let maxDelete = peekEntityNumber(editsByOperation[EditOperation.DELETE]);
     let maxInsert = peekEntityNumber(editsByOperation[EditOperation.INSERT]);
@@ -65,6 +87,12 @@ function popMaxGroup(editsByOperation, prevEntityNumber) {
     }
 }
 
+/**
+ * Given a list of EditEntities, build a new list which groups together contiguous operations.
+ *
+ * @param {EditEntity[]} editEntities a list of EditEntities
+ * @returns {EditEntity[]}
+ */
 export function groupByContiguousOperation(editEntities) {
     // Build accumulator as a map with an empty array present for all possible keys
     let accumulator = { 1: [], 2:[], 3:[], 4: [] }
@@ -87,20 +115,29 @@ export function groupByContiguousOperation(editEntities) {
 }
 
 /**
- * 
- * @param {EditDistance} editDistance 
+ * Convert the edits derived from an EditDistance object into EditEntities.
+ *
+ * @param {EditDistance} editDistance an EditDistance object
  * @returns {EditEntity[]}
  */
 export function toEditEntities(editDistance) {
     let entities = [];
     let entityNum = 1;
     editDistance.fullEdits.forEach(edit => {
-        entities.push(...mapToEditEntities(edit, entityNum))
+        entities.push(...convertToEditEntities(edit, entityNum))
         entityNum ++;
     });
     return entities;
 }
 
+/**
+ * Split a list of EditEntities into two seperate lists, with the first list showing insertions,
+ * and the second showing deletions. Insert blank lines in the opposite list corresponding to
+ * operations not included. NONE operations appear in both lists.
+ *
+ * @param {EditEntity[]} editEntities a list of EditEntities
+ * @returns {EditEntity[][]}
+ */
 export function splitByOperation(editEntities) {
     let inserts = [];
     let deletes = [];
@@ -126,13 +163,24 @@ export function splitByOperation(editEntities) {
     return [inserts, deletes];
 }
 
+/**
+ * A class representing a graphically displayable component, corresponding to an edit operation
+ * (INSERT, DELETE, etc.) and the line/character it operates on.
+ */
 export class EditEntity {
-
+    /**
+     * Create an EditEntity.
+     *
+     * @param {EditOperation} operation the operation it represents
+     * @param {String} symbol the line/character it operates on
+     * @param {Number} entityNumber the line number of the operation
+     * @param {Edit[]]?} subEditEntities if this operating on a line of text from a document, and
+     * if this is a replacement, this represents the edits needed to be done on the line.
+     */
     constructor(operation, symbol, entityNumber, subEditEntities = null) {
         this.operation = operation;
         this.symbol = symbol;
         this.entityNumber = entityNumber;
         this.subEditEntities = subEditEntities;
     }
-
 }

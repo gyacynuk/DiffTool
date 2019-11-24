@@ -1,3 +1,12 @@
+/**
+ * ------------------------------------------------------------------------------------------------
+ * A component which houses a set of DiffLines, showing the complete set of differences between two
+ * documents. Also provides radio buttons to change display type, and a switch to control
+ * computation mode.
+ *
+ * Author: Griffin Yacynuk
+ * ------------------------------------------------------------------------------------------------
+ */
 import React from 'react'
 import styled from '@xstyled/styled-components';
 import { toEditEntities, groupByContiguousOperation, splitByOperation } from '../editdistance/EditEntity'
@@ -36,7 +45,7 @@ function DiffContainer(props) {
 
     let editEntities = toEditEntities(props.editDistance);
 
-    let inlineView = <RoundBoxer row
+    let inlineView = <RoundBoxer row key={1}
         m={2}
         mb={5}>
         {
@@ -45,7 +54,7 @@ function DiffContainer(props) {
         }
     </RoundBoxer>;
 
-    let sideView = <RoundBoxer row
+    let sideView = <RoundBoxer row key={2}
         m={2}
         mb={5}>
             <Box col={1/2}> 

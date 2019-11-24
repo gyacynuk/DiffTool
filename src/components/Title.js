@@ -1,3 +1,10 @@
+/**
+ * ------------------------------------------------------------------------------------------------
+ * The component representing the title and header of the page.
+ *
+ * Author: Griffin Yacynuk
+ * ------------------------------------------------------------------------------------------------
+ */
 import React, { Component } from 'react'
 import { Box, Text } from '@smooth-ui/core-sc'
 import styled from '@xstyled/styled-components';

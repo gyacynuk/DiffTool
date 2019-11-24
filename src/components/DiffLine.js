@@ -1,3 +1,10 @@
+/**
+ * ------------------------------------------------------------------------------------------------
+ * A set of components used to build a line highlighting differences between two documents.
+ *
+ * Author: Griffin Yacynuk
+ * ------------------------------------------------------------------------------------------------
+ */
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { EditOperation } from '../editdistance/EditDistance'
