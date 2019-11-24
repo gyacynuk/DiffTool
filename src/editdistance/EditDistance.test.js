@@ -1,4 +1,4 @@
-import {EditDistance, EditOperation} from './EditDistance';
+import { EditDistance, EditOperation } from './EditDistance';
 
 it('computes min edit distance on two empty inputs', () => {
     expect(new EditDistance('', '', false).minEditDistance).toBe(0);

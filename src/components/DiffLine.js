@@ -13,7 +13,7 @@ const Line = styled.div`
     width: 100%;
     height: auto;
     display: inline-flex;
-    overflow: scroll;
+    overflow: auto;
     text-align: left;
     font-family: 'Inconsolata', monospace;
     font-size: 16px;
