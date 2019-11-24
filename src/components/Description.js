@@ -80,44 +80,131 @@ class Description extends Component {
                     Solving for the edit distance between two strings lends itself well to dynamic programming,
                     as we can break the problem down into small subproblems which can be reused multiple times.
                     For instance, let's return to our example above, using the words <CodeText>Saturday</CodeText>
-                    &nbsp;and <CodeText>Sunday</CodeText>. Let's also assume we know that the edit distance for the
-                    following pairs:
+                    &nbsp;and <CodeText>Sunday</CodeText>. Let's also assume for argument's sake that we know the
+                    edit distance for the following pairs:
                     <ol type="a">
                         <li><CodeText>Saturday</CodeText>, <CodeText>Sunda</CodeText></li>
                         <li><CodeText>Saturda</CodeText>, <CodeText>Sunday</CodeText></li>
                         <li><CodeText>Saturda</CodeText>, <CodeText>Sunda</CodeText></li>
                     </ol>
-                    Then we know that the edit distance between <CodeText>Saturday</CodeText> and&nbsp;
-                    <CodeText>Sunday</CodeText> is the minimum of the following:
+                    Then from this we can deduce that the edit distance between <CodeText>Saturday</CodeText> and&nbsp;
+                    <CodeText>Sunday</CodeText> must be the minimum of the following:
                     <ul>
-                        <li>Edit distance a) + 1 to insert <CodeText>y</CodeText> into <CodeText>Sunda</CodeText>, or equivalently delete <CodeText>y</CodeText> from <CodeText>Saturday</CodeText></li>
-                        <li>Edit distance b) + 1 to insert <CodeText>y</CodeText> into <CodeText>Saturda</CodeText>, or equivalently delete <CodeText>y</CodeText> from <CodeText>Sunday</CodeText> </li>
-                        <li>Edit distance c) + 1 the following pair of characters (<CodeText>y, y</CodeText>) are not equal and hence we have to substitue one, or + 0 if they are equal</li>
+                        <li>Edit distance a. + 1 to insert <CodeText>y</CodeText> into <CodeText>Sunda</CodeText>, or equivalently delete <CodeText>y</CodeText> from <CodeText>Saturday</CodeText></li>
+                        <li>Edit distance b. + 1 to insert <CodeText>y</CodeText> into <CodeText>Saturda</CodeText>, or equivalently delete <CodeText>y</CodeText> from <CodeText>Sunday</CodeText> </li>
+                        <li>Edit distance c. + 1 the following pair of characters (<CodeText>y, y</CodeText>) are not equal and hence we have to substitue one, or + 0 if they are equal</li>
                     </ul>
-                    We can generalize this as follows: given two strings denoted as <CodeText>A, B</CodeText>, let <CodeText>d(i, j)</CodeText> denote
-                    the edit distance between the substring of the first <CodeText>i</CodeText> character of <CodeText>A</CodeText> and the
+                    We can generalize this into a recurrence relation as follows: given two strings denoted
+                    as <CodeText>A, B</CodeText>, let <CodeText>d(i,j)</CodeText> be the edit distance between
+                    the substring of the first <CodeText>i</CodeText> character of <CodeText>A</CodeText> and the
                     first <CodeText>j</CodeText> characters of <CodeText>B</CodeText>. Then we have:
                     <br/>
-                    <center><CodeText>d(i, j) = min( d(i-1, j)+1, d(i, j-1)+1, d(i-1, j-1) + diff(A[i], B[j])</CodeText></center>
                     <br/>
-                    where <CodeText>CodeText(A[i], B[j])</CodeText> is equal to 1 if the characters <CodeText>A[i] = B[j]</CodeText>, otherwise 0.
- 
-                </Text>
-
-                <Text variant="p" color={"#D8D8D8"}>
-                <i className="fas fa-square" color={"#D8D8D8"}></i>
-                </Text>
-                <Text variant="p" color={"#A8F7A6"}>
-                <i className="fas fa-square" color={"#A8F7A6"}></i>
-                </Text>
-                <Text variant="p" color={"#A088FF"}>
-                <i className="fas fa-square" color={"#A088FF"}></i>
+                    <center><CodeText>d(i, j) = min( d(i-1, j) + 1, d(i, j-1) + 1, d(i-1, j-1) + diff(A[i],B[j]) )</CodeText></center>
+                    <br/>
+                    where <CodeText>diff(A[i],B[j])</CodeText> is equal to 1 if the characters <CodeText>A[i] == B[j]</CodeText>, otherwise 0.
+                    From this recurrence relationship, we can develop our dynamic programming algorithm. We can use
+                    a matrix <CodeText>M</CodeText> to store the results of our subproblems so they can be reused.
+                    Let <CodeText>M[i,j]</CodeText> store the edit distance <CodeText>d(i,j)</CodeText>, and let
+                    zero-indices represent the edit distance between the empty string and the corresponding substring.
+                    From this, we can infer that <CodeText>M[0,0] = 0</CodeText> (since the empty string compared
+                    with itself has an edit distance of 0). Furthermore, any string <CodeText>S</CodeText> compared
+                    to the empty string has an edit distance of <CodeText>length(S)</CodeText>, so using this we
+                    can populate all the entries in the first row and column. Now, starting at <CodeText>M[1,1]</CodeText> we
+                    can apply our recurrence relation defined above, since we have all needed values to
+                    compute <CodeText>M[1,1] = diff(1,1)</CodeText> stored in the adjacent entries to the left, 
+                    top, and top-left of this entry (<CodeText>M[0,1] = diff(0,1), M[1,0] = diff(1,0), M[0,0] = diff(0,0)</CodeText>).
+                    By continuing to populate values in the matrix accross the scan-line (left to right, top to bottom),
+                    the entire matrix can be populated. Finally, the bottom-right-most entry will contain the
+                    edit distance between the entirety of the strings, giving us our solution.
+                    <br/>
+                    <br/>
+                    From this matrix, we can also determine the optimal sequence of operations needed to make
+                    the two strings equal by walking backwards from the bottom-right-most square
+                    to <CodeText>M[1,1]</CodeText>. At each step in the walk, we move left, up, or up and left
+                    into the square with the least cost. In the case of a tie, we always opt for moving on a
+                    diagonal, it we will reach <CodeText>M[1,1]</CodeText> with fewer strps. I have illistrated
+                    this process below, with arrows marking the path walked, grey squares (
+                    <Text variant="p" color={"#D8D8D8"}>
+                        <i className="fas fa-square" color={"#D8D8D8"}></i>
+                    </Text>
+                    ) representing the case where characters are the same (cost of 0), green squares (
+                    <Text variant="p" color={"#A8F7A6"}>
+                        <i className="fas fa-square" color={"#A8F7A6"}></i>
+                    </Text>
+                    ) representing instertions (cost of 1), and purple squares (
+                    <Text variant="p" color={"#A088FF"}>
+                        <i className="fas fa-square" color={"#A088FF"}></i>
+                    </Text>
+                    ) represent substitutions (cost of 1).
                 </Text>
                 <Box row justifyContent={'center'} p={3}>
                     <RoundBoxer col={{xs:1, sm:"auto"}}>
                         <Image src={matrix}/>
                     </RoundBoxer>
                 </Box> 
+                <Text variant="p">
+                    Initially I thought I could apply this algorithm directly to two documents, treating each
+                    line as if it were a character. But this did not produce the results I was expecting. While
+                    this approach did manage to match up identical lines with eachother, it would pair inserted, 
+                    modified or deleted lines with random lines in the other file. This is becuase it was treating
+                    each line like a character, and when comparing two characters, they either are the same or they
+                    are not. However when dealing with entire lines of text, this comparason is not so black-and-white:
+                    instead there is a concept of <em>similarity</em>, and I somehow had to quantify this.
+                    <br/>
+                    <br/>
+                    Luckily for me I had a great tool to do so, having just implemented the edit distance algorithm.
+                    So for my second approach, I would modify my algorithm to compute the edit distance over the entire
+                    document where the cost of an instertion or deletion is equal to the length of the line inserted
+                    or deleted, the and the cost of a substitution is the edit distance between the lines being substituded!
+                    This algoritm yeilded much better results, however it still wasn't perfect. Consider the following
+                    example documents:
+                </Text>
+                <Box row justifyContent={'center'} p={3}>
+                    <RoundBoxer col={3/7} p={{xs:1, md:3}} mx={{xs:1, md:3}}>
+                        <CodeText>
+                            Hello World!
+                            <br/>
+                            Hello
+                        </CodeText>
+                    </RoundBoxer>
+                    <RoundBoxer col={3/7} p={{xs:1, md:3}} mx={{xs:1, md:3}}>
+                        <CodeText>
+                            Hello
+                        </CodeText>
+                    </RoundBoxer>
+                </Box> 
+                <Text variant="p">
+                    My algorithm would opt to align <CodeText>"Hello World!"</CodeText> with <CodeText>"Hello"</CodeText> and
+                    then consider the <CodeText>"Hello"</CodeText> in the
+                    left-most document as an insertion (at a cost of 7 for substitution + 5 for instertion = 12), since
+                    the substitution operation is a diagonal step on the walk described above. However
+                    the desired behaviour would have been to consider <CodeText>"Hello World!"</CodeText> as an insertion,
+                    and then match <CodeText>"Hello"</CodeText> with <CodeText>"Hello"</CodeText> (also at cost of 12). 
+                    To overcome this, I initally tried removing the
+                    prioritization on diagonal steps in the case of a tie, but then ended up prodicing strange
+                    behaviour. I also tried re-weighting the cost of the different operations making instertions and
+                    deletions cheaper, but I could always provide an adversarial example which would once again
+                    produce strange behaviour.
+                    <br/>
+                    <br/>
+                    I was finally able to overcome this when I had the realization that my core goal is to match up
+                    as many identical lines as possible, and then find the best pairing of similar lines afterwards.
+                    With this in mind, I restructured the algorithm so that whenever it paired two identical lines
+                    together, this operation would have a negative cost such that the resulting element in the matrix
+                    becomes 0. Furthermore, I increased the cost of all other operations by 1, thus reserving the
+                    0-cost element for perfect matches. By doing so the algorithm will always opt to pair up macthing
+                    lines (as they have a cost strictly less than all other operations), whilst matching up the
+                    non-macthing lines with their most similar pairs. Unfortunately while this change does pair
+                    up the lines of the two documents in the optimal fashion, it comes at the cost of losing
+                    the measurement of total "edit distance" between the documents (which luckily is of no
+                    interest to me).
+                    <br/>
+                    <br/>
+                    And with that, we have my algorithm for document comparason. To test this algorithm out,
+                    see the next interactive section below where you can see how this algorithm performs with
+                    your own documents!
+                </Text>
 
                 <Text variant="h2" mt={5}>Try it Out!</Text>
                 <Separator/>
