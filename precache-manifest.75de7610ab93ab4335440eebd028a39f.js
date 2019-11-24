@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "cf7c264ba12f95a4a15da198692e3b79",
+    "revision": "8773f2296fb7338f7cfc2a3d3adee9a4",
     "url": "/DiffTool/index.html"
   },
   {
-    "revision": "366e0a2c6259f53b2db0",
+    "revision": "cf542c4482e8bab0cdac",
     "url": "/DiffTool/static/css/main.34de6062.chunk.css"
   },
   {
-    "revision": "f78579e7308e6d1eaf18",
-    "url": "/DiffTool/static/js/2.ff1b09d7.chunk.js"
+    "revision": "2fcbe71ba1d45c9e8fb9",
+    "url": "/DiffTool/static/js/2.17d84b72.chunk.js"
   },
   {
-    "revision": "366e0a2c6259f53b2db0",
-    "url": "/DiffTool/static/js/main.32077dc1.chunk.js"
+    "revision": "cf542c4482e8bab0cdac",
+    "url": "/DiffTool/static/js/main.863415de.chunk.js"
   },
   {
     "revision": "4a599a49710f0698c616",
