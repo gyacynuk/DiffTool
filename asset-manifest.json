@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/DiffTool/static/css/main.34de6062.chunk.css",
-    "main.js": "/DiffTool/static/js/main.1447c76c.chunk.js",
-    "main.js.map": "/DiffTool/static/js/main.1447c76c.chunk.js.map",
+    "main.js": "/DiffTool/static/js/main.ee874b99.chunk.js",
+    "main.js.map": "/DiffTool/static/js/main.ee874b99.chunk.js.map",
     "runtime-main.js": "/DiffTool/static/js/runtime-main.b3579e94.js",
     "runtime-main.js.map": "/DiffTool/static/js/runtime-main.b3579e94.js.map",
-    "static/js/2.1264d3bb.chunk.js": "/DiffTool/static/js/2.1264d3bb.chunk.js",
-    "static/js/2.1264d3bb.chunk.js.map": "/DiffTool/static/js/2.1264d3bb.chunk.js.map",
+    "static/js/2.ff1b09d7.chunk.js": "/DiffTool/static/js/2.ff1b09d7.chunk.js",
+    "static/js/2.ff1b09d7.chunk.js.map": "/DiffTool/static/js/2.ff1b09d7.chunk.js.map",
     "index.html": "/DiffTool/index.html",
-    "precache-manifest.a37f08e21f60b59dc3fbcc96b7fdba76.js": "/DiffTool/precache-manifest.a37f08e21f60b59dc3fbcc96b7fdba76.js",
+    "precache-manifest.5c344c25d7eda45e69b6afae0113fb6b.js": "/DiffTool/precache-manifest.5c344c25d7eda45e69b6afae0113fb6b.js",
     "service-worker.js": "/DiffTool/service-worker.js",
     "static/css/main.34de6062.chunk.css.map": "/DiffTool/static/css/main.34de6062.chunk.css.map",
     "static/media/edit_distance.png": "/DiffTool/static/media/edit_distance.6aca0a77.png",
@@ -16,8 +16,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.b3579e94.js",
-    "static/js/2.1264d3bb.chunk.js",
+    "static/js/2.ff1b09d7.chunk.js",
     "static/css/main.34de6062.chunk.css",
-    "static/js/main.1447c76c.chunk.js"
+    "static/js/main.ee874b99.chunk.js"
   ]
 }
